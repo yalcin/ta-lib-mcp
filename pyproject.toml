@@ -1,0 +1,93 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ta-lib-mcp-server"
+dynamic = ["version"]
+description = "Read-only Python MCP server for TA-Lib indicator discovery and computation."
+readme = "README.md"
+requires-python = ">=3.13"
+license = "MIT"
+authors = [
+    { name = "Yalcin Acikyildiz" },
+]
+keywords = ["mcp", "ta-lib", "technical-analysis", "llm"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "mcp[cli]>=1.26.0",
+]
+
+[project.optional-dependencies]
+talib = [
+    "TA-Lib>=0.4.28",
+]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.25",
+    "pytest-cov>=6.0",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "pre-commit>=4.0",
+]
+
+[project.scripts]
+ta-lib-mcp = "ta_lib_mcp.server:main"
+
+[project.urls]
+Homepage = "https://github.com/yalcin/ta-lib-mcp"
+Repository = "https://github.com/yalcin/ta-lib-mcp"
+Issues = "https://github.com/yalcin/ta-lib-mcp/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ta_lib_mcp"]
+
+[tool.hatch.version]
+path = "src/ta_lib_mcp/__init__.py"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 99
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W",    # pycodestyle
+    "F",         # pyflakes
+    "I",         # isort
+    "N",         # pep8-naming
+    "D",         # pydocstyle
+    "UP",        # pyupgrade
+    "S",         # bandit (security)
+    "B",         # bugbear
+    "A",         # builtins
+    "C4",        # comprehensions
+    "RUF",       # ruff-specific
+]
+ignore = ["D100", "D104"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "D102", "D103"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "--cov=ta_lib_mcp --cov-report=term-missing --cov-report=html"
